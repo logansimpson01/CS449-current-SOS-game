@@ -1,5 +1,4 @@
 # sos_game.py
-
 from tkinter import *
 from tkinter import simpledialog
 from math import atan2, degrees
@@ -149,6 +148,7 @@ class SOSGUI:
         self.player_colors = {"Blue": "blue", "Red": "red"}
         self.cell_size = 50
         self.show_setup_dialog()
+        self.master.minsize(600, 800)
 
     def show_setup_dialog(self):
         dialog = Toplevel(self.master)
@@ -540,6 +540,7 @@ class SOSGUI:
     
         Button(dialog, text="Apply", command=apply_settings,
                font=("Helvetica", 10), width=10).pack(pady=20)
+
 
     def reset_game(self):
         # Clear canvas

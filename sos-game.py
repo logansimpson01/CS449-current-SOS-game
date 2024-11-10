@@ -541,30 +541,6 @@ class SOSGUI:
         Button(dialog, text="Apply", command=apply_settings,
                font=("Helvetica", 10), width=10).pack(pady=20)
 
-    def restart_or_new_game(self, new_setup=False):
-        if new_setup:
-            dialog = Toplevel(self.master)
-            dialog.title("New Game")
-            dialog.transient(self.master)
-            dialog.grab_set()
-            dialog.geometry("300x150")
-        
-            Label(dialog, text="Start a new game with different settings?",
-                  font=("Helvetica", 12)).pack(pady=20)
-        
-            def confirm():
-                dialog.destroy()
-                self.master.destroy()
-                new_root = Tk()
-                SOSGUI(new_root)
-        
-            Button(dialog, text="Yes", command=confirm, 
-                   width=10).pack(side=LEFT, padx=20, pady=20)
-            Button(dialog, text="No", command=dialog.destroy, 
-                   width=10).pack(side=RIGHT, padx=20, pady=20)
-        else:
-            self.reset_game()
-
     def reset_game(self):
         # Clear canvas
         self.canvas.delete("all")

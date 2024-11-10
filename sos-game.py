@@ -1,6 +1,5 @@
 # sos_game.py
 
-
 from tkinter import *
 from tkinter import simpledialog
 from math import atan2, degrees
@@ -476,8 +475,8 @@ class SOSGUI:
     
     
         # Increase dialog size to accommodate new controls
-        dialog_width = 300
-        dialog_height = 250
+        dialog_width = 350
+        dialog_height = 450
         screen_width = dialog.winfo_screenwidth()
         screen_height = dialog.winfo_screenheight()
         x = (screen_width - dialog_width) // 2

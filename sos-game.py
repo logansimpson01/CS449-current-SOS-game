@@ -22,6 +22,7 @@ class SOSGameLogic:
         self.red_score = 0
         self.last_sos_count = 0
         self.sos_lines.clear()
+        self.move_in_progress = False  # Add this flag to prevent multiple moves
 
     def place_letter(self, row, col, letter):
         if self.game_over or self.board[row][col] != '':
@@ -382,14 +383,15 @@ class SOSGUI:
             self.draw_sos_lines(new_sos_lines, current_player)
             self.update_ui()
             
-            # Schedule computer's move if it's next
+            # Only schedule next computer move if it's computer's turn and game isn't over
             if (not self.game_logic.game_over and 
                 self.game_logic.get_current_player_type() == "Computer"):
+                # Schedule new computer move
                 self.master.after(1000, self.make_computer_move)
 
     def make_computer_move(self):
         """Handle computer player's turn"""
-        if not self.game_logic.game_over:
+        if not self.game_logic.game_over and self.game_logic.get_current_player_type() == "Computer":
             row, col, letter = self.game_logic.make_computer_move()
             if row is not None:
                 if self.game_logic.current_player == "Blue":
@@ -397,11 +399,6 @@ class SOSGUI:
                 else:
                     self.red_choice.set(letter)
                 self.make_move(row, col)
-
-            # Schedule next computer move if needed
-            if (not self.game_logic.game_over and 
-                self.game_logic.get_current_player_type() == "Computer"):
-                self.master.after(1000, self.make_computer_move)
 
     def draw_sos_lines(self, sos_lines, player):
         for start_pos, end_pos in sos_lines:
@@ -473,7 +470,6 @@ class SOSGUI:
         dialog.grab_set()
         dialog.geometry("350x500")  # Increased height for new controls
     
-    
         # Increase dialog size to accommodate new controls
         dialog_width = 350
         dialog_height = 450
@@ -507,6 +503,10 @@ class SOSGUI:
         Radiobutton(dialog, text="Computer", variable=red_player, value="Computer").pack()
     
         def apply_settings():
+            # Cancel any pending computer moves
+            for after_id in self.master.tk.call('after', 'info'):
+                self.master.after_cancel(int(after_id))
+                
             # Update game mode
             self.game_mode.set(new_mode.get())
             self.game_logic.game_mode = new_mode.get()
@@ -535,6 +535,7 @@ class SOSGUI:
             
             dialog.destroy()
 
+            # Schedule the first computer move if it's computer's turn
             if self.game_logic.get_current_player_type() == "Computer":
                 self.master.after(1000, self.make_computer_move)
     
